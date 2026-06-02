@@ -1,0 +1,12 @@
+{
+  "name": "travel-agent",
+  "private": true,
+  "scripts": {
+    "ts-dev": "pnpm --filter web dev",
+    "ts-lint": "pnpm --filter web lint && pnpm --filter web exec prettier --check .",
+    "ts-test": "pnpm --filter web test"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.0"
+  }
+}
