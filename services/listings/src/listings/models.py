@@ -23,7 +23,7 @@ class ListingItem(BaseModel):
     amenities: list[str]
     description: str
     rating: float = Field(ge=4.0, le=5.0)
-    image_url: str
+    image_url: str = ""
 
 
 class ListingsPayload(BaseModel):

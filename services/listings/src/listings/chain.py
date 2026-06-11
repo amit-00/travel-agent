@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import Runnable
+from langchain_core.runnables import Runnable, RunnableLambda
 
-from .models import ListingsPayload
+from .models import ListingItem, ListingsPayload
+from .tools import search_pexels_image
 
 load_dotenv()
 
@@ -20,12 +21,19 @@ For each listing produce:
 - A 2-3 sentence description highlighting key features
 - A realistic rating between 4.0 and 5.0
 - A plausible neighborhood name within or near the requested location
-- An image URL in the format: https://images.listings-api.dev/photos/<uuid>.jpg \
-  (generate a unique UUID v4 for each listing)
 
 Make the 3 listings diverse in price, style, and neighborhood. \
 Honour all constraints given (price range, amenities, property type, guest count).\
 """
+
+
+def _enrich_with_images(payload: ListingsPayload) -> ListingsPayload:
+    enriched: list[ListingItem] = []
+    for listing in payload.listings:
+        query = f"{listing.property_type} {listing.neighborhood} vacation rental"
+        url = search_pexels_image.invoke({"query": query})
+        enriched.append(listing.model_copy(update={"image_url": url}))
+    return ListingsPayload(listings=enriched)
 
 
 def build_listings_chain() -> Runnable[dict[str, str], ListingsPayload]:
@@ -39,4 +47,4 @@ def build_listings_chain() -> Runnable[dict[str, str], ListingsPayload]:
         ]
     )
 
-    return prompt | structured_model  # type: ignore[return-value]
+    return prompt | structured_model | RunnableLambda(_enrich_with_images)
