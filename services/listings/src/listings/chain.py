@@ -1,12 +1,9 @@
-from dotenv import load_dotenv
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable, RunnableLambda
 
 from .models import ListingItem, ListingsPayload
 from .tools import search_pexels_image
-
-load_dotenv()
 
 _SYSTEM_PROMPT = """\
 You are a property listings fabricator for a travel app demo. Your job is to \

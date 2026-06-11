@@ -1,14 +1,16 @@
 from datetime import date
 from typing import Annotated
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 
 from .chain import build_listings_chain
 from .models import ListingsResponse, PropertyType
 
-app = FastAPI(title="Listings API", version="0.1.0")
+load_dotenv()
 
+app = FastAPI(title="Listings API", version="0.1.0")
 chain = build_listings_chain()
 
 
