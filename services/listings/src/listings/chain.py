@@ -1,8 +1,8 @@
 import asyncio
 
-from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable, RunnableLambda
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from .models import ListingItem, ListingsPayload
 from .tools import search_pexels_image
@@ -37,7 +37,7 @@ async def _enrich_with_images(payload: ListingsPayload) -> ListingsPayload:
 
 
 def build_listings_chain() -> Runnable[dict[str, str], ListingsPayload]:
-    model = ChatAnthropic(model="claude-sonnet-4-6")  # type: ignore[call-arg]
+    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite")
     structured_model = model.with_structured_output(ListingsPayload)
 
     prompt = ChatPromptTemplate.from_messages(
