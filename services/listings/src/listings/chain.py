@@ -1,3 +1,5 @@
+import asyncio
+
 from langchain_anthropic import ChatAnthropic
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable, RunnableLambda
@@ -24,13 +26,14 @@ Honour all constraints given (price range, amenities, property type, guest count
 """
 
 
-def _enrich_with_images(payload: ListingsPayload) -> ListingsPayload:
-    enriched: list[ListingItem] = []
-    for listing in payload.listings:
+async def _enrich_with_images(payload: ListingsPayload) -> ListingsPayload:
+    async def fetch(listing: ListingItem) -> ListingItem:
         query = f"{listing.property_type} {listing.neighborhood} vacation rental"
-        url = search_pexels_image.invoke({"query": query})
-        enriched.append(listing.model_copy(update={"image_url": url}))
-    return ListingsPayload(listings=enriched)
+        url = await search_pexels_image.ainvoke({"query": query})
+        return listing.model_copy(update={"image_url": url})
+
+    enriched = await asyncio.gather(*[fetch(item) for item in payload.listings])
+    return ListingsPayload(listings=list(enriched))
 
 
 def build_listings_chain() -> Runnable[dict[str, str], ListingsPayload]:

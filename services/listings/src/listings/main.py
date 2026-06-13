@@ -24,7 +24,7 @@ def health() -> HealthResponse:
 
 
 @app.get("/listings")
-def get_listings(
+async def get_listings(
     location: str,
     check_in: date,
     check_out: date,
@@ -54,7 +54,7 @@ def get_listings(
     )
 
     try:
-        payload = chain.invoke({"request": request_text})
+        payload = await chain.ainvoke({"request": request_text})
     except Exception as exc:
         raise HTTPException(
             status_code=502, detail="Listing generation failed"

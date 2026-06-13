@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
 from listings.main import app
@@ -62,7 +62,7 @@ def make_payload(listings: list[ListingItem] = FAKE_LISTINGS) -> ListingsPayload
 
 def test_get_listings_returns_three_results() -> None:
     with patch("listings.main.chain") as mock_chain:
-        mock_chain.invoke.return_value = make_payload()
+        mock_chain.ainvoke = AsyncMock(return_value=make_payload())
         response = client.get("/listings", params=VALID_PARAMS)
 
     assert response.status_code == 200
@@ -72,7 +72,7 @@ def test_get_listings_returns_three_results() -> None:
 
 def test_get_listings_response_echoes_location_and_dates() -> None:
     with patch("listings.main.chain") as mock_chain:
-        mock_chain.invoke.return_value = make_payload()
+        mock_chain.ainvoke = AsyncMock(return_value=make_payload())
         response = client.get("/listings", params=VALID_PARAMS)
 
     body = response.json()
@@ -91,11 +91,11 @@ def test_get_listings_passes_all_params_to_chain() -> None:
         "property_type": "cabin",
     }
     with patch("listings.main.chain") as mock_chain:
-        mock_chain.invoke.return_value = make_payload()
+        mock_chain.ainvoke = AsyncMock(return_value=make_payload())
         response = client.get("/listings", params=params)
 
     assert response.status_code == 200
-    call_args = mock_chain.invoke.call_args[0][0]
+    call_args = mock_chain.ainvoke.call_args[0][0]
     assert "pool" in call_args["request"]
     assert "cabin" in call_args["request"]
 
