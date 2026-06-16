@@ -1,4 +1,4 @@
-.PHONY: install dev lint test py-dev py-lint py-test ts-dev ts-lint ts-test
+.PHONY: install dev lint test py-dev py-lint py-test travel-dev travel-lint travel-test ts-dev ts-lint ts-test
 
 install:
 	uv sync --all-packages --all-groups
@@ -17,6 +17,17 @@ py-lint:
 
 py-test:
 	uv run --package agent pytest services/agent/tests/ -v
+
+travel-dev:
+	uv run --package travel uvicorn travel.main:app --reload --port 8002
+
+travel-lint:
+	uv run --package travel ruff check services/travel/src services/travel/tests
+	uv run --package travel ruff format --check services/travel/src services/travel/tests
+	uv run --package travel mypy services/travel/src
+
+travel-test:
+	uv run --package travel pytest services/travel/tests/ -v
 
 ts-dev:
 	pnpm --filter web dev
