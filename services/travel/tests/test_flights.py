@@ -2,7 +2,6 @@ from datetime import datetime
 from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
-
 from travel.main import app
 from travel.models import FlightOption, FlightsPayload, Layover
 

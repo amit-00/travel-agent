@@ -34,7 +34,9 @@ async def get_flights(
     if departure_datetime is None and arrival_datetime is None:
         raise HTTPException(
             status_code=422,
-            detail="At least one of departure_datetime or arrival_datetime is required.",
+            detail=(
+                "At least one of departure_datetime or arrival_datetime is required."
+            ),
         )
     if departure_datetime is not None and arrival_datetime is not None:
         raise HTTPException(
@@ -78,6 +80,9 @@ def _format_request(
     if departure_datetime is not None:
         parts.append(f"Departure: {departure_datetime.isoformat()}")
     else:
-        assert arrival_datetime is not None
+        if arrival_datetime is None:
+            raise ValueError(
+                "arrival_datetime must be set when departure_datetime is None"
+            )
         parts.append(f"Must arrive by: {arrival_datetime.isoformat()}")
     return "\n".join(parts)

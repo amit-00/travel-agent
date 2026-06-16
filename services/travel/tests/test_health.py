@@ -1,5 +1,4 @@
 from fastapi.testclient import TestClient
-
 from travel.main import app
 
 client = TestClient(app)
