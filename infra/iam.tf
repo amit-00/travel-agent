@@ -29,6 +29,9 @@ resource "google_artifact_registry_repository_iam_member" "listings_deployer_wri
   member     = "serviceAccount:${google_service_account.listings_deployer.email}"
 }
 
+# roles/run.developer does not support per-service IAM bindings in GCP.
+# This grants the deployer access to all Cloud Run services in the project.
+# Acceptable: only the listings service exists today. Revisit when more services are added.
 resource "google_project_iam_member" "listings_deployer_run_developer" {
   project = var.project_id
   role    = "roles/run.developer"

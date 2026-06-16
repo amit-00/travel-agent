@@ -272,12 +272,6 @@ resource "google_secret_manager_secret_iam_member" "listings_runtime_pexels_api_
   member    = "serviceAccount:${google_service_account.listings_runtime.email}"
 }
 
-resource "google_secret_manager_secret_iam_member" "listings_runtime_anthropic_api_key" {
-  secret_id = google_secret_manager_secret.listings_anthropic_api_key.secret_id
-  role      = "roles/secretmanager.secretAccessor"
-  member    = "serviceAccount:${google_service_account.listings_runtime.email}"
-}
-
 resource "google_artifact_registry_repository_iam_member" "listings_deployer_writer" {
   repository = google_artifact_registry_repository.listings.name
   location   = var.region
@@ -344,9 +338,8 @@ output "listings_deployer_sa_email" {
 output "secret_ids" {
   description = "Secret Manager secret IDs for referencing in Cloud Run env config"
   value = {
-    google_api_key    = google_secret_manager_secret.listings_google_api_key.secret_id
-    pexels_api_key    = google_secret_manager_secret.listings_pexels_api_key.secret_id
-    anthropic_api_key = google_secret_manager_secret.listings_anthropic_api_key.secret_id
+    google_api_key = google_secret_manager_secret.listings_google_api_key.secret_id
+    pexels_api_key = google_secret_manager_secret.listings_pexels_api_key.secret_id
   }
 }
 ```
@@ -383,14 +376,14 @@ cd infra && terraform plan
 
 Review the output. Expected: 10 resources to create —
 - 1 Artifact Registry repo
-- 3 Secret Manager secrets
+- 2 Secret Manager secrets (google-api-key, pexels-api-key)
 - 2 service accounts
-- 3 secret IAM bindings (runtime SA × 3 secrets)
+- 2 secret IAM bindings (runtime SA × 2 secrets)
 - 1 Artifact Registry IAM binding (deployer)
 - 1 project IAM binding (deployer run.developer)
 - 1 SA IAM binding (deployer act-as runtime)
 
-Total: 12 resources. Verify no unexpected changes or deletions.
+Total: 10 resources. Verify no unexpected changes or deletions.
 
 - [ ] **Step 2: Apply**
 
@@ -398,7 +391,7 @@ Total: 12 resources. Verify no unexpected changes or deletions.
 cd infra && terraform apply
 ```
 
-Type `yes` when prompted. Expected: all 12 resources created successfully.
+Type `yes` when prompted. Expected: all 10 resources created successfully.
 
 - [ ] **Step 3: Populate secret values**
 
