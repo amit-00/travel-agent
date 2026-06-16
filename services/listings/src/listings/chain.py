@@ -37,7 +37,7 @@ async def _enrich_with_images(payload: ListingsPayload) -> ListingsPayload:
 
 
 def build_listings_chain() -> Runnable[dict[str, str], ListingsPayload]:
-    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash-lite")
+    model = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite")
     structured_model = model.with_structured_output(ListingsPayload)
 
     prompt = ChatPromptTemplate.from_messages(
