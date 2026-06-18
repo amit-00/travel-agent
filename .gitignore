@@ -15,7 +15,16 @@ node_modules/
 out/
 .turbo/
 
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+*.tfstate
+*.tfstate.backup
+infra/backend.hcl
+
 # Misc
 .DS_Store
 .env
 .env.local
+.claude/

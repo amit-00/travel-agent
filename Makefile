@@ -1,4 +1,4 @@
-.PHONY: install dev lint test py-dev py-lint py-test travel-dev travel-lint travel-test ts-dev ts-lint ts-test
+.PHONY: install dev lint test py-dev py-lint py-test listings-dev listings-lint listings-test travel-dev travel-lint travel-test ts-dev ts-lint ts-test
 
 install:
 	uv sync --all-packages --all-groups
@@ -17,6 +17,17 @@ py-lint:
 
 py-test:
 	uv run --package agent pytest services/agent/tests/ -v
+
+listings-dev:
+	uv run --package listings uvicorn listings.main:app --reload --port 8001
+
+listings-lint:
+	uv run --package listings ruff check services/listings/src services/listings/tests
+	uv run --package listings ruff format --check services/listings/src services/listings/tests
+	uv run --package listings mypy services/listings/src
+
+listings-test:
+	uv run --package listings pytest services/listings/tests/ -v
 
 travel-dev:
 	uv run --package travel uvicorn travel.main:app --reload --port 8002
