@@ -25,16 +25,20 @@ def health() -> HealthResponse:
 
 @app.get("/listings")
 async def get_listings(
-    location: str,
+    location: Annotated[str, Query(min_length=1, max_length=200)],
     check_in: date,
     check_out: date,
     adults: Annotated[int, Query(ge=1)],
     children: Annotated[int, Query(ge=0)] = 0,
     min_price: float | None = None,
     max_price: float | None = None,
-    amenities: Annotated[list[str], Query()] = [],
+    amenities: Annotated[list[str], Query(max_length=50)] = [],
     property_type: PropertyType | None = None,
 ) -> ListingsResponse:
+    if len(amenities) > 20:
+        raise HTTPException(
+            status_code=422, detail="amenities must not exceed 20 items"
+        )
     if check_in >= check_out:
         raise HTTPException(
             status_code=422,

@@ -1,6 +1,7 @@
 terraform {
+  # bucket is supplied at init time via: terraform init -backend-config=backend.hcl
+  # See backend.hcl.example for the required format.
   backend "gcs" {
-    bucket = "wander-499115-tfstate"
     prefix = "prod/terraform.tfstate"
   }
 

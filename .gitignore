@@ -21,6 +21,7 @@ out/
 *.tfvars
 *.tfstate
 *.tfstate.backup
+infra/backend.hcl
 
 # Misc
 .DS_Store
