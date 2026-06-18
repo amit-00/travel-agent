@@ -23,6 +23,9 @@ out/
 *.tfstate.backup
 infra/backend.hcl
 
+# Docker
+docker-compose.override.yml
+
 # Misc
 .DS_Store
 .env

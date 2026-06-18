@@ -1,14 +1,15 @@
 FROM python:3.12-slim
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.9.30 /uv /usr/local/bin/uv
 
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+COPY services/travel/pyproject.toml services/travel/
+RUN uv sync --frozen --no-dev --no-install-project --package travel
 
-COPY src/ src/
-RUN uv sync --frozen --no-dev
+COPY services/travel/src/ services/travel/src/
+RUN uv sync --frozen --no-dev --package travel
 
 RUN useradd --no-create-home appuser
 USER appuser

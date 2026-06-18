@@ -1,0 +1,16 @@
+.git
+.claude
+node_modules
+.next
+**/__pycache__
+**/.venv
+**/*.pyc
+.mypy_cache
+.ruff_cache
+.pytest_cache
+infra/.terraform
+infra/*.tfstate
+infra/*.tfvars
+infra/backend.hcl
+.env
+.env.local

@@ -1,0 +1,39 @@
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: services/agent/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+
+  listings:
+    build:
+      context: .
+      dockerfile: services/listings/Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      PEXELS_API_KEY: ${PEXELS_API_KEY}
+
+  travel:
+    build:
+      context: .
+      dockerfile: services/travel/Dockerfile
+    ports:
+      - "8002:8000"
+    environment:
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - agent
+      - listings
+      - travel

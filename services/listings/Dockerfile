@@ -5,10 +5,11 @@ COPY --from=ghcr.io/astral-sh/uv:0.9.30 /uv /usr/local/bin/uv
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+COPY services/listings/pyproject.toml services/listings/
+RUN uv sync --frozen --no-dev --no-install-project --package listings
 
-COPY src/ src/
-RUN uv sync --frozen --no-dev
+COPY services/listings/src/ services/listings/src/
+RUN uv sync --frozen --no-dev --package listings
 
 RUN useradd --no-create-home appuser
 USER appuser
