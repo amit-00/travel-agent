@@ -27,3 +27,4 @@ infra/backend.hcl
 .DS_Store
 .env
 .env.local
+.claude/
