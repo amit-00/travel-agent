@@ -1,12 +1,18 @@
 services:
-  agent:
+  wander-agent:
     build:
       context: .
-      dockerfile: services/agent/Dockerfile
+      dockerfile: services/wander-agent/Dockerfile
     ports:
       - "8000:8000"
     environment:
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      TAVILY_API_KEY: ${TAVILY_API_KEY}
+      LISTINGS_SERVICE_URL: http://listings:8000
+      TRAVEL_SERVICE_URL: http://travel:8000
+    depends_on:
+      - listings
+      - travel
 
   listings:
     build:
@@ -25,5 +31,5 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - agent
+      - wander-agent
       - listings

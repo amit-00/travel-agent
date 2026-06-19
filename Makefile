@@ -5,18 +5,18 @@ install:
 	pnpm install
 
 dev:
-	$(MAKE) -j2 py-dev ts-dev
+	$(MAKE) -j2 wander-agent-dev ts-dev
 
-py-dev:
-	uv run --package agent uvicorn agent.main:app --reload
+wander-agent-dev:
+	uv run --package wander-agent uvicorn wander_agent.main:app --reload
 
-py-lint:
-	uv run --package agent ruff check services/
-	uv run --package agent ruff format --check services/
-	uv run --package agent mypy services/agent/src
+wander-agent-lint:
+	uv run --package wander-agent ruff check services/wander-agent/src services/wander-agent/tests
+	uv run --package wander-agent ruff format --check services/wander-agent/src services/wander-agent/tests
+	uv run --package wander-agent mypy services/wander-agent/src
 
-py-test:
-	uv run --package agent pytest services/agent/tests/ -v
+wander-agent-test:
+	uv run --package wander-agent pytest services/wander-agent/tests/ -v
 
 listings-dev:
 	uv run --package listings uvicorn listings.main:app --reload --port 8001
@@ -39,6 +39,6 @@ ts-lint:
 ts-test:
 	pnpm --filter web test
 
-lint: py-lint ts-lint
+lint: wander-agent-lint listings-lint travel-lint ts-lint
 
-test: py-test ts-test
+test: wander-agent-test listings-test travel-test ts-test
