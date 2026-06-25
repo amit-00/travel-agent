@@ -1,5 +1,5 @@
-from agent.main import app
 from fastapi.testclient import TestClient
+from wander_agent.main import app
 
 client = TestClient(app)
 
