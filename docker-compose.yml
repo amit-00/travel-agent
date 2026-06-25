@@ -18,15 +18,6 @@ services:
       GOOGLE_API_KEY: ${GOOGLE_API_KEY}
       PEXELS_API_KEY: ${PEXELS_API_KEY}
 
-  travel:
-    build:
-      context: .
-      dockerfile: services/travel/Dockerfile
-    ports:
-      - "8002:8000"
-    environment:
-      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
-
   web:
     build:
       context: .
@@ -36,4 +27,3 @@ services:
     depends_on:
       - agent
       - listings
-      - travel
